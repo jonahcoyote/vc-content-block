@@ -12,7 +12,7 @@ License: GPLv2 or later
 // don't load directly
 if (!defined('ABSPATH')) die('-1');
 
-class VCExtendAddonClass {
+class VCContentBlockAddonClass {
     function __construct() {
         // We safely integrate with VC with this hook
         add_action( 'init', array( $this, 'integrateWithVC' ) );
@@ -36,15 +36,9 @@ class VCExtendAddonClass {
 
         More info: http://kb.wpbakery.com/index.php?title=Vc_map
         */
-        global $wpdb;
-        $blocks         = $wpdb->get_results("
-          SELECT ID, post_title
-          FROM " . $wpdb->prefix . "posts
-          WHERE post_type = 'content_block'
-          ORDER BY id ASC LIMIT 999
-          ");
+        $blocks = get_posts( 'post_type="content_block"&numberposts=-1' );
         $blocks_array = array();
-        if ($blocks) {
+        if ( $blocks ) {
             foreach ($blocks as $block) {
                 $blocks_array[$block->post_title] = $block->ID;
             }
@@ -87,7 +81,9 @@ class VCExtendAddonClass {
       ), $atts ) );
 
       //echo $id;
-      return do_shortcode( '[content_block id='.$id.']' );
+      $output = '';
+      $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id=' . $id . ']' ) );
+      echo $output;
     }
 
     /*
@@ -113,4 +109,4 @@ class VCExtendAddonClass {
     }
 }
 // Finally initialize code
-new VCExtendAddonClass();
+new VCContentBlockAddonClass();
