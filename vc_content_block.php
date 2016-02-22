@@ -85,7 +85,7 @@ class VCContentBlockAddonClass {
       //echo $id;
       $output = '';
       $output .= wpb_widget_title( array('title' => $title, 'extraclass' => 'wpb_content_block_heading') );
-      $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id="${id}" class="content_block ${el_class}"]]' ) );
+      $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id=' . $id . ' class="content_block ' . $el_class . '"]' ) );
       echo $output;
     }
 
