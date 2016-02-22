@@ -82,7 +82,7 @@ class VCContentBlockAddonClass {
 
       //echo $id;
       $output = '';
-      $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id=' . $id . ']' ) );
+      $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id="${id}" class="content_block ${el_class}"]]' ) );
       echo $output;
     }
 
