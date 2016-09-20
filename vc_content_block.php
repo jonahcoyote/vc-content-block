@@ -62,11 +62,39 @@ class VCContentBlockAddonClass {
                     "description" => __("Choose previously created Content Blocks from the drop down list.", "mk_framework")
                 ),
                 array(
+                    "type" => "range",
+                    "heading" => __("Padding Top", "mk_framework") ,
+                    "param_name" => "margin_top",
+                    "value" => "0",
+                    "min" => "0",
+                    "max" => "500",
+                    "step" => "1",
+                    "unit" => 'px',
+                    "description" => __("", "mk_framework")
+                ) ,
+                array(
+                    "type" => "range",
+                    "heading" => __("Padding Bottom", "mk_framework") ,
+                    "param_name" => "margin_bottom",
+                    "value" => "20",
+                    "min" => "0",
+                    "max" => "500",
+                    "step" => "1",
+                    "unit" => 'px',
+                    "description" => __("", "mk_framework")
+                ),
+                array(
                     "type" => "textfield",
                     "heading" => __("Extra class name", "mk_framework"),
                     "param_name" => "el_class",
                     "value" => "",
                     "description" => __("If you wish to style particular content element differently, then use this field to add a class name and then refer to it in Custom CSS Shortcode or Masterkey Custom CSS option.", "mk_framework")
+                ),
+                array(
+                    "type" => "hidden_input",
+                    "param_name" => "cb_class",
+                    "value" => "",
+                    "description" => __("", "mk_framework")
                 )
             )
         ));
@@ -79,6 +107,8 @@ class VCContentBlockAddonClass {
       extract( shortcode_atts( array(
         'title' => '',
         'id' => '',
+        'margin_top' => '0',
+        'margin_bottom' => '20',
         'cb_class' => '',
         'el_class' => ''
       ), $atts ) );
@@ -86,17 +116,26 @@ class VCContentBlockAddonClass {
       //echo $id;
       $post = get_post($id);
       $cb_class = $post->post_name;
+      $styles = '
+        <style>
+          #custom_post_widget-'.$id.' {
+            padding-top:'.$margin_top.'px;
+            padding-bottom:'.$margin_bottom.'px;
+          }
+        </style>
+      ';
       $output = '';
+      $output .= $styles;
       $output .= wpb_widget_title( array('title' => $title, 'extraclass' => 'wpb_content_block_heading') );
       $output .= apply_filters( 'vc_content_block_shortcode', do_shortcode( '[content_block id=' . $id . ' class="content_block ' . $el_class . ' ' . $cb_class .'"]' ) );
-      echo $output;
+      return $output;
     }
 
     /*
     Load plugin css and javascript files which you may need on front end of your site
     */
     public function loadCssAndJs() {
-      //wp_register_style( 'vc_extend_style', plugins_url('assets/vc_extend.css', __FILE__) );
+      //wp_register_style( 'vc_extend_style', plugins_url('assets/vc_content-block.css', __FILE__) );
       //wp_enqueue_style( 'vc_extend_style' );
 
       // If you need any javascript files on front end, here is how you can load them.
